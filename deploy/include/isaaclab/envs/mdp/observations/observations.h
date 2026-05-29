@@ -83,6 +83,26 @@ REGISTER_OBSERVATION(joint_pos_rel)
     return data;
 }
 
+// Like joint_pos_rel, but zeroes the slots listed in params["wheel_joint_ids"].
+// Output length always equals the full joint count (16 for B2W), matching the
+// policy input dimension.  Wheel slots are trained on 0.0 (position undefined
+// for continuously-spinning wheels), so feeding q-q_default there is wrong.
+REGISTER_OBSERVATION(joint_pos_rel_without_wheel)
+{
+    auto & asset = env->robot;
+    std::vector<float> data(asset->data.joint_pos.size());
+    for (size_t i = 0; i < asset->data.joint_pos.size(); ++i)
+        data[i] = asset->data.joint_pos[i] - asset->data.default_joint_pos[i];
+
+    try {
+        const auto wheel_ids = params["wheel_joint_ids"].as<std::vector<int>>();
+        for (int idx : wheel_ids)
+            if (idx >= 0 && idx < static_cast<int>(data.size())) data[idx] = 0.0f;
+    } catch (const std::exception &) {}
+
+    return data;
+}
+
 REGISTER_OBSERVATION(joint_vel_rel)
 {
     auto & asset = env->robot;

@@ -1,0 +1,200 @@
+# B2W deploy config — shared across all b2w rough policies.
+# Edit here; no need to copy into each policy's params/ folder.
+#
+# joint order (MJCF actuator / lowcmd motor_cmd index):
+#   [0]  FR_hip   [1]  FR_thigh  [2]  FR_calf
+#   [3]  FL_hip   [4]  FL_thigh  [5]  FL_calf
+#   [6]  RR_hip   [7]  RR_thigh  [8]  RR_calf
+#   [9]  RL_hip   [10] RL_thigh  [11] RL_calf
+#   [12] FR_foot  [13] FL_foot   [14] RR_foot  [15] RL_foot
+
+# Identity mapping: policy joint i → lowcmd motor_cmd[i]
+joint_ids_map: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+
+step_dt: 0.02 # sim dt (0.005) × decimation (4)
+
+# PD gains applied in State_RLBase::enter() — legs only.
+# Wheel slots [12-15] are overridden to kp=0/kd=1 every cycle in run().
+stiffness:
+  [
+    160.0,
+    160.0,
+    160.0,
+    160.0,
+    160.0,
+    160.0,
+    160.0,
+    160.0,
+    160.0,
+    160.0,
+    160.0,
+    160.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+  ]
+damping:
+  [
+    5.0,
+    5.0,
+    5.0,
+    5.0,
+    5.0,
+    5.0,
+    5.0,
+    5.0,
+    5.0,
+    5.0,
+    5.0,
+    5.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+  ]
+
+default_joint_pos:
+  [
+    0.0,
+    0.8,
+    -1.5,
+    0.0,
+    0.8,
+    -1.5,
+    0.0,
+    0.8,
+    -1.5,
+    0.0,
+    0.8,
+    -1.5,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+  ]
+
+commands:
+  base_velocity:
+    ranges:
+      lin_vel_x: [-1.0, 1.0]
+      lin_vel_y: [-1.0, 1.0]
+      ang_vel_z: [-1.0, 1.0]
+      heading: null
+
+actions:
+  # Leg joints [0-11]: position PD control
+  # scale matches training: hip=0.125, thigh/calf=0.25
+  JointPositionAction:
+    clip: null
+    joint_ids: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    scale:
+      [
+        0.125,
+        0.25,
+        0.25,
+        0.125,
+        0.25,
+        0.25,
+        0.125,
+        0.25,
+        0.25,
+        0.125,
+        0.25,
+        0.25,
+      ]
+    offset: [0.0, 0.8, -1.5, 0.0, 0.8, -1.5, 0.0, 0.8, -1.5, 0.0, 0.8, -1.5]
+  # Wheel joints [12-15]: velocity control (kp=0, kd=1.0 set in run())
+  JointVelocityAction:
+    clip: null
+    joint_ids: [12, 13, 14, 15]
+    scale: [5.0, 5.0, 5.0, 5.0]
+    offset: null
+
+observations:
+  base_ang_vel:
+    params: {}
+    clip: null
+    scale: [0.25, 0.25, 0.25]
+    history_length: 1
+  projected_gravity:
+    params: {}
+    clip: null
+    scale: [1.0, 1.0, 1.0]
+    history_length: 1
+  # For keyboard control. Swap to velocity_commands for gamepad/DDS joystick.
+  # velocity_commands:
+  keyboard_velocity_commands:
+    params: {command_name: base_velocity}
+    clip: null
+    scale: [1.0, 1.0, 1.0]
+    history_length: 1
+  joint_pos_rel_without_wheel:
+    params: { wheel_joint_ids: [12, 13, 14, 15] }
+    clip: null
+    scale:
+      [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+      ]
+    history_length: 1
+  joint_vel_rel:
+    params: {}
+    clip: null
+    scale:
+      [
+        0.05,
+        0.05,
+        0.05,
+        0.05,
+        0.05,
+        0.05,
+        0.05,
+        0.05,
+        0.05,
+        0.05,
+        0.05,
+        0.05,
+        0.05,
+        0.05,
+        0.05,
+        0.05,
+      ]
+    history_length: 1
+  last_action:
+    params: {}
+    clip: null
+    scale:
+      [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+      ]
+    history_length: 1

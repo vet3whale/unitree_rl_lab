@@ -1,7 +1,4 @@
-# DDS domain used by ChannelFactory::Init().
-# 1 = unitree_mujoco simulator (default here — safe for sim2sim).
-# TODO(b2w): change to 0 for real robot deployment.
-dds_domain_id: 1
+dds_domain_id: 0 # DDS domain used by ChannelFactory::Init().
 
 FSM:
   _: # enabled fsms
@@ -96,7 +93,7 @@ FSM:
         ],
       ]
   SitDown:
-    settle_time: 0.5
+    settle_time: 0.25
     duration: 2.5
   Velocity:
     transitions:

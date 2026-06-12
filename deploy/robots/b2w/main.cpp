@@ -34,8 +34,7 @@ int main(int argc, char** argv)
     std::cout << "     B2W Controller \n";
 
     // Unitree DDS Config
-    unitree::robot::ChannelFactory::Instance()->Init(
-        param::config["dds_domain_id"].as<int>(), vm["network"].as<std::string>());
+    unitree::robot::ChannelFactory::Instance()->Init(0, vm["network"].as<std::string>());
 
     init_fsm_state();
 

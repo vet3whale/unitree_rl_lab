@@ -122,13 +122,19 @@ observations:
     clip: null
     scale: [1.0, 1.0, 1.0]
     history_length: 1
-  # For keyboard control. Swap to velocity_commands for gamepad/DDS joystick.
-  # velocity_commands:
+  # Keyboard (numpad) control for sim2sim testing - reads FSMState::keyboard.
   keyboard_velocity_commands:
     params: {command_name: base_velocity}
     clip: null
     scale: [1.0, 1.0, 1.0]
     history_length: 1
+  # For real robot / gamepad: comment out keyboard_velocity_commands above and uncomment this
+  # (reads the controller paired to the B2W via lowstate->joystick; ranges from commands.base_velocity.ranges).
+  # velocity_commands:
+  #   params: {}
+  #   clip: null
+  #   scale: [1.0, 1.0, 1.0]
+  #   history_length: 1
   joint_pos_rel_without_wheel:
     params: { wheel_joint_ids: [12, 13, 14, 15] }
     clip: null

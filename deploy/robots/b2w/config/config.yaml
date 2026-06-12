@@ -1,5 +1,3 @@
-dds_domain_id: 0 # DDS domain used by ChannelFactory::Init().
-
 FSM:
   _: # enabled fsms
     Passive:
@@ -40,12 +38,12 @@ FSM:
         400,
         400,
         400,
-        400,
-        400,
-        400,
-        400,
+        0,
+        0,
+        0,
+        0,
       ] # TODO(b2w): tune leg kp if B2W dynamics differ
-    kd: [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8] # TODO(b2w): tune wheel kd (indices 12-15)
+    kd: [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3, 3, 3, 3] # legs 8 (B2); wheels 3 (matches go2w)
     ts: [0, 1, 3]
     # Each keyframe has 16 entries: 12 leg joints + 4 wheel joints (default_q=0, confirmed from URDF/env.yaml).
     # qs[0] is overwritten at runtime with current motor positions; the 16-entry length here prevents

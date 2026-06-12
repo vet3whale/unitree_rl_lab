@@ -10,24 +10,24 @@ namespace isaaclab
 // To use: in deploy.yaml rename "velocity_commands" → "keyboard_velocity_commands".
 // To revert to gamepad/DDS joystick: rename back to "velocity_commands".
 //
-// Key layout (WASD ring + QE yaw + arrows + numpad with NumLock on):
-//   forward : w, up-arrow, numpad-8
-//   backward: s, down-arrow, numpad-2
-//   left    : a, numpad-4
-//   right   : d, numpad-6
-//   yaw CCW : q, left-arrow, numpad-7
-//   yaw CW  : e, right-arrow, numpad-9
+// Key layout (numpad with NumLock ON):
+//   forward : numpad-8
+//   backward: numpad-2
+//   left    : numpad-4
+//   right   : numpad-6
+//   yaw CCW : numpad-7
+//   yaw CW  : numpad-9
 //   stop    : any other key (or no key)
 REGISTER_OBSERVATION(keyboard_velocity_commands)
 {
     std::string key = FSMState::keyboard->key();
     static const std::unordered_map<std::string, std::vector<float>> key_commands = {
-        {"w", {1.0f,  0.0f,  0.0f}},
-        {"s", {-1.0f, 0.0f,  0.0f}},
-        {"a", {0.0f,  1.0f,  0.0f}},
-        {"d", {0.0f,  -1.0f, 0.0f}},
-        {"q", {0.0f,  0.0f,  1.0f}},
-        {"e", {0.0f,  0.0f,  -1.0f}},
+        {"8", {1.0f,  0.0f,  0.0f}},  // forward
+        {"2", {-1.0f, 0.0f,  0.0f}},  // backward
+        {"4", {0.0f,  1.0f,  0.0f}},  // strafe left
+        {"6", {0.0f,  -1.0f, 0.0f}},  // strafe right
+        {"7", {0.0f,  0.0f,  1.0f}},  // yaw CCW
+        {"9", {0.0f,  0.0f,  -1.0f}}, // yaw CW
     };
 
     std::vector<float> cmd = {0.0f, 0.0f, 0.0f};

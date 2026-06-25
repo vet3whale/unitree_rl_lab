@@ -54,6 +54,9 @@ public:
         robot->update();
         action_manager->reset();
         observation_manager->reset();
+        // Reset the policy's internal state so a recurrent student begins each episode from the
+        // zero hidden state it was trained to reset to (no-op for stateless policies).
+        if (alg) alg->reset_state();
     }
 
     void step()

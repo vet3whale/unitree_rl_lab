@@ -15,6 +15,10 @@ class Algorithms
 public:
     virtual std::vector<float> act(std::unordered_map<std::string, std::vector<float>> obs) = 0;
 
+    // Reset any internal policy state (e.g. a recurrent student's hidden state) at the start of an
+    // episode. No-op for stateless policies; overridden by recurrent runners.
+    virtual void reset_state() {}
+
     std::vector<float> get_action()
     {
         std::lock_guard<std::mutex> lock(act_mtx_);

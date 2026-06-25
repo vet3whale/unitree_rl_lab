@@ -91,8 +91,16 @@ FSM:
         ],
       ]
   SitDown:
-    settle_time: 0.25
+    settle_time: 0.05
     duration: 2.5
+    # Phase-3 controlled-release window: legs hold the sit pose while leg kp is
+    # ramped to 0, so the body settles instead of flopping when Passive engages.
+    hold_time: 0.5
+    # Wheel position-hold gains during the sit (legs are kp=0 in FixStand, so the
+    # wheels would otherwise roll/skid as the body lowers). Conservative defaults.
+    # TODO(b2w): tune wheel_kp/wheel_kd on hardware - too stiff may buzz the hubs.
+    wheel_kp: 30
+    wheel_kd: 4
   Velocity:
     transitions:
       SitDown: LT + B.on_pressed
@@ -101,4 +109,5 @@ FSM:
     # Points to the most-recently trained B2W rough policy in robot_lab.
     # parser_policy_dir() walks subdirs and picks the last one with an exported/ folder.
     # TODO(b2w): switch to a velocity-specific run dir after dedicated velocity training
-    policy_dir: ../../../../robot_lab/logs/rsl_rl/unitree_b2w_rough
+    policy_dir: ../../../../robot_lab/logs/rsl_rl/unitree_b2w_multiexpert
+
